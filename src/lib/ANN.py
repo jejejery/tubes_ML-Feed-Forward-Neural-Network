@@ -10,7 +10,10 @@ class ANN:
         self.output_size = output_size
 
     def add(self, layer):
-        if isinstance(layer, HiddenLayer):
+        #if the last layer is output layer, then it's not valid to add another hidden layer
+        if(len(self.layers) > 0 and self.layers[-1].layer_type == "output"):
+                raise ValueError("OutputLayer already exist!")
+        elif isinstance(layer, HiddenLayer):
             self.layers.append(layer)
         elif isinstance(layer, OutputLayer):
             self.layers.append(layer)
@@ -20,3 +23,16 @@ class ANN:
     def debug(self):
         for layer in self.layers:
             print(f"Layer: {layer.name} - {layer.layer_type}")
+
+    
+    """
+    Implementation of the forward propagation algorithm
+
+    Arguments:
+    X -- Input data (np.array, shape: (input_size, m) 2D array)
+    """
+    def forward_propagation(self, X : np.array):
+        A = X
+        for layer in self.layers:
+            A = layer.forward_propagation(A)
+        return A

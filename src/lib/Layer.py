@@ -1,3 +1,4 @@
+import numpy as np
 
 class Layer:
     """
@@ -23,40 +24,60 @@ class Layer:
     ===========
 
     ======= EXAMPLE CODE =======
-    inputs = np.array([input1, input2, input3])
+    # input vector: (2 x 4) -> included bias  
+    x = np.array([[1, x11, x12, x13], [1, x21, x22, x23]])
 
-    # weight matrix: (3 x 2)
-    weights_input_output = np.array([[w11, w12],
-                                    [w21, w22],
-                                    [w31, w32]])
+    # weight matrix: (4 x 3) -> first row is bias
+    W = np.array([[wb1, wb2, wb3],
+                    [w11, w21, w31],
+                    [w12, w22, w32],
+                    [w13, w23, w33]])
+    
 
-    # the_bias
-    bias_output = np.array([b1, b2])
+    # do the matrix multiplication
+    output_input = x @ W
 
-    # do the matrix multiplication + bias
-    output_input = np.dot(inputs, weights_input_output) + bias_output
+    # expected output:
+    [[wb1 + w11*x11 + w12*x12 + w13*x13, wb2 + w21*x11 + w22*x12 + w23*x13, wb3 + w31*x11 + w32*x12 + w33*x13], -> 1st data
+    [wb1 + w11*x21 + w12*x22 + w13*x23, wb2 + w21*x21 + w22*x22 + w23*x23, wb3 + w31*x21 + w32*x22 + w33*x23] -> 2nd data
+    ]
 
-    # finalize with activation function
+    # finalize with activation function, can be relu or something else
     final_output = activation_function(output_input)
     ============================
 
 
     """
-    def __init__(self, name, layer_type, input_shape, output_shape, weights, biases):
+    def __init__(self, name : str, layer_type : str, input_shape : int, output_shape: int, weights : np.array, activation_function :str):
         self.name = name
         self.layer_type = layer_type
         self.input_shape = input_shape
         self.output_shape = output_shape
         self.weights = weights
-        self.biases = biases
+        self.activation_function = activation_function
+        self.current_output = None
+
+    
 
     """
         Forward propagation of the layer
-        for 1st milestone
+        a virtual method
     """
     def forward_propagation(self):
-        print("forward propagation of the layer is not implemented yet")
+        return
+    
+    """
+    linear combination of the input and the weights
+    expected input: (number_of_data, input_shape+1)
+    expected weights: (input_shape+1, output_shape)
+    expected output: (number_of_data, output_shape)
 
+    """
+    def pre_activation(self, input_array : np.array):
+        #preprocess the input 
+        add_bias = np.insert(input_array, 0, np.ones(input_array.shape[0]), axis=1)
+        #do the matrix multiplication
+        return add_bias @ self.weights
     
     """
         Backward propagation of the layer
