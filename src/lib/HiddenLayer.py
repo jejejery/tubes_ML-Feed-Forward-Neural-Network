@@ -5,5 +5,7 @@ class HiddenLayer(Layer):
         super().__init__(name, "hidden", input_shape, output_shape, weights, activation_function)
 
     #override
-    def forward_propagation(self):
-        return super().forward_propagation()
+    #override
+    def forward_propagation(self, input_array : np.array):
+        return super().forward_propagation(input_array=input_array)
+        #make sure input dimension is 2D

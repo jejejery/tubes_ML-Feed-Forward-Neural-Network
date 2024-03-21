@@ -1,4 +1,5 @@
 import numpy as np
+from lib.ActivationFunction import ActivationFunction
 
 class Layer:
     """
@@ -28,6 +29,7 @@ class Layer:
     x = np.array([[1, x11, x12, x13], [1, x21, x22, x23]])
 
     # weight matrix: (4 x 3) -> first row is bias
+    # output shape: number of columns of the weight matrix or W.shape[1]
     W = np.array([[wb1, wb2, wb3],
                     [w11, w21, w31],
                     [w12, w22, w32],
@@ -53,6 +55,8 @@ class Layer:
         self.layer_type = layer_type
         self.input_shape = input_shape
         self.output_shape = output_shape
+        if(weights.shape != (input_shape+1, output_shape)):
+            raise ValueError(f"Invalid weight shape: {weights.shape}. Expected: {(input_shape+1, output_shape)}")
         self.weights = weights
         self.activation_function = activation_function
         self.current_output = None
@@ -61,10 +65,13 @@ class Layer:
 
     """
         Forward propagation of the layer
-        a virtual method
     """
-    def forward_propagation(self):
-        return
+    def forward_propagation(self, input_array : np.array):
+         #make sure input dimension is 2D
+        if len(input_array.shape) == 1:
+            input_array = input_array.reshape(1, -1)
+        self.current_output = ActivationFunction.get_activation_function(self.activation_function)(self.pre_activation(input_array))
+        return self.current_output
     
     """
     linear combination of the input and the weights
@@ -85,5 +92,10 @@ class Layer:
     """
     def backward_propagation(self):
         print("backward propagation of the layer is not implemented yet")
+
+    def debug(self):
+        print(f"Layer: {self.name} | Type: {self.layer_type}", end=" ")
+        print(f"| Output shape: {self.output_shape}")
+        print(f"Weights:\n {self.weights}")
         
         

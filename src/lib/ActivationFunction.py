@@ -32,8 +32,10 @@ class ActivationFunction:
 
     @staticmethod
     def softmax(Z):
+        if(len(Z.shape) == 1):
+            Z = Z.reshape(1, -1)
         expZ = np.exp(Z - np.max(Z))
-        return expZ / expZ.sum(axis=0, keepdims=True)
+        return expZ / expZ.sum(axis=1, keepdims=True)
 
     @staticmethod
     def softmax_derivative(Z):

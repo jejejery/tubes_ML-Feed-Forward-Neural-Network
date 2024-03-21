@@ -1,5 +1,6 @@
 
 import numpy as np
+from lib.Layer import Layer
 from lib.HiddenLayer import HiddenLayer
 from lib.OutputLayer import OutputLayer
 
@@ -21,8 +22,12 @@ class ANN:
             raise ValueError("Invalid layer type. Only HiddenLayer or OutputLayer allowed.")
 
     def debug(self):
+        print("=====================================")
         for layer in self.layers:
-            print(f"Layer: {layer.name} - {layer.layer_type}")
+            layer.debug()
+            if(layer.layer_type != "output"): print("_____________________________________")
+        print("=====================================")
+            
 
     
     """

@@ -1,4 +1,5 @@
 from lib.ANN import ANN
+import numpy as np
 
 class Model:
 
@@ -19,4 +20,14 @@ class Model:
     def summary(self):
         print(f"Summary for Model: {self.name}")
         self.ann.debug()
+
+    def predict(self, X : np.array):
+        #resize is X is not 2D array
+        if(len(X.shape) == 1):
+            X = X.reshape(X.shape[0], 1)
+        #if input shape invalid
+        if(X.shape[1] != self.ann.input_size):
+            raise ValueError(f"Invalid input size. Expected: {self.ann.input_size}, got: {X.shape[1]}")
+        #return
+        return self.ann.forward_propagation(X)
         
