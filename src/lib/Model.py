@@ -1,5 +1,6 @@
 from lib.ANN import ANN
 import numpy as np
+import pickle as p
 
 class Model:
 
@@ -20,6 +21,11 @@ class Model:
     def summary(self):
         print(f"Summary for Model: {self.name}")
         self.ann.debug()
+
+    def save(self,filename):
+        with open(filename, 'wb') as file:
+            p.dump(self, file)
+
 
     def predict(self, X : np.array):
         #resize is X is not 2D array
