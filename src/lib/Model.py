@@ -26,6 +26,11 @@ class Model:
         with open(filename, 'wb') as file:
             p.dump(self, file)
 
+    @staticmethod
+    def load(filename):
+        with open(filename, 'rb') as file:
+            temp = p.load(file)
+        return temp
 
     def predict(self, X : np.array):
         #resize is X is not 2D array
@@ -36,4 +41,3 @@ class Model:
             raise ValueError(f"Invalid input size. Expected: {self.ann.input_size}, got: {X.shape[1]}")
         #return
         return self.ann.forward_propagation(X)
-        
