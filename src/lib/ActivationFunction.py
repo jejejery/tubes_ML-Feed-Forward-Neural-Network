@@ -12,7 +12,7 @@ class ActivationFunction:
 
     @staticmethod
     def sigmoid_derivative(Z):
-        return ActivationFunction.sigmoid(Z) * (1 - ActivationFunction.sigmoid(Z))
+        return Z * (1 - Z)
 
     @staticmethod
     def relu(Z):
@@ -35,6 +35,8 @@ class ActivationFunction:
         if(len(Z.shape) == 1):
             Z = Z.reshape(1, -1)
         expZ = np.exp(Z - np.max(Z))
+        # check each expZ element, if 0, then it will be 10^-10
+        expZ[expZ == 0] = 1e-10
         return expZ / expZ.sum(axis=1, keepdims=True)
 
     @staticmethod

@@ -58,7 +58,10 @@ class Layer:
         if(weights.shape != (input_shape+1, output_shape)):
             raise ValueError(f"Invalid weight shape: {weights.shape}. Expected: {(input_shape+1, output_shape)}")
         self.weights = weights
+        self.delta_weights = np.zeros(self.weights.shape)
         self.activation_function = activation_function
+        # initialize when forward propagation is called
+        self.current_input = None
         self.current_output = None
 
     
@@ -70,6 +73,7 @@ class Layer:
          #make sure input dimension is 2D
         if len(input_array.shape) == 1:
             input_array = input_array.reshape(1, -1)
+        self.current_input = input_array
         self.current_output = ActivationFunction.get_activation_function(self.activation_function)(self.pre_activation(input_array))
         return self.current_output
     
@@ -91,7 +95,7 @@ class Layer:
         for 2nd milestone
     """
     def backward_propagation(self):
-        print("backward propagation of the layer is not implemented yet")
+        return
 
     def debug(self):
         print(f"Layer: {self.name} | Type: {self.layer_type}", end=" ")

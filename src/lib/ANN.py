@@ -5,10 +5,11 @@ from lib.HiddenLayer import HiddenLayer
 from lib.OutputLayer import OutputLayer
 
 class ANN:
-    def __init__(self, input_size, output_size):
+    def __init__(self, input_size, output_size, learning_rate=1e-2, max_epoch=1000, tolerance=1e-5):
         self.input_size = input_size
         self.layers = []
         self.output_size = output_size
+        self.learning_rate = learning_rate
 
     def add(self, layer):
         #check if the input shape of the new layer is the same as the output shape of the last layer (if filled)
@@ -48,4 +49,27 @@ class ANN:
         A = X
         for layer in self.layers:
             A = layer.forward_propagation(A)
+        # print(f"loss: {loss(A)}")
+        # print turunan dari loss(A)
         return A
+    
+    def backward_propagation(self):
+        #implement the backward propagation
+        #for 2nd milestone
+        gradient = None
+        for layer in reversed(self.layers):
+            if gradient is None:
+                #for output layer, the gradient is the gradient of the loss function
+                gradient = layer.backward_propagation()
+            else:
+                #for hidden layer, the gradient is the gradient of the next layer
+                # gradient = layer.backward_propagation(gradient) =====> to be implemented
+                layer.backward_propagation()
+            self.update_weights()
+
+    def update_weights(self):
+        for layer in self.layers:
+            layer.weights = layer.weights - self.learning_rate * layer.delta_weights
+        
+          
+            

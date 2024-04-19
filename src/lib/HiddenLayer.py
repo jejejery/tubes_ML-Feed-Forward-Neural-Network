@@ -7,5 +7,9 @@ class HiddenLayer(Layer):
     #override
     #override
     def forward_propagation(self, input_array : np.array):
-        return super().forward_propagation(input_array=input_array)
+        self.current_output = super().forward_propagation(input_array=input_array)
+        return self.current_output
         #make sure input dimension is 2D
+
+    def backward_propagation(self):
+        super().backward_propagation()

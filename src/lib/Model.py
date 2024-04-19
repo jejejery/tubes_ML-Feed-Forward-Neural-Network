@@ -41,3 +41,6 @@ class Model:
             raise ValueError(f"Invalid input size. Expected: {self.ann.input_size}, got: {X.shape[1]}")
         #return
         return self.ann.forward_propagation(X)
+    
+    def test_backward(self):
+        self.ann.backward_propagation()
