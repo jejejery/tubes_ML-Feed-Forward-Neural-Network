@@ -66,10 +66,15 @@ class ANN:
                 # gradient = layer.backward_propagation(gradient) =====> to be implemented
                 layer.backward_propagation()
             self.update_weights()
+        self.reset_delta_weights()
 
     def update_weights(self):
         for layer in self.layers:
             layer.weights = layer.weights - self.learning_rate * layer.delta_weights
+    
+    def reset_delta_weights(self):
+        for layer in self.layers:
+            layer.delta_weights = np.zeros(layer.weights.shape)
         
           
             
