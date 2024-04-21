@@ -68,18 +68,11 @@ class OutputLayer(Layer):
     def softmax_gradient(self):
         #find argmax of each row for the expected output
         pk = np.argmax(self.expected_output, axis=1)
-        #find argmax of each row for the current output
-        pk_hat = np.argmax(self.current_output, axis=1)
-
-        is_same = (pk == pk_hat) #np array
-
-        # clone the current output
+        
         current_output_clone = np.array(self.current_output)
-        for i in range(len(is_same)):
-            if is_same[i]:
-                current_output_clone[i][pk_hat[i]] = -(1-self.current_output[i][pk_hat[i]])
-            else:
-                current_output_clone[i] = -(1-self.current_output[i])
-                current_output_clone[i][pk_hat[i]] = self.current_output[i][pk_hat[i]]
+        # sort the current output in descending order
+        -np.sort(-current_output_clone, axis=1)
+        for i in range(len(current_output_clone)):
+            current_output_clone[i][pk[i]] = -(1-current_output_clone[i][pk[i]])
 
         return current_output_clone

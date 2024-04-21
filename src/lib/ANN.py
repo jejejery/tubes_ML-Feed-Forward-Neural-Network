@@ -5,7 +5,7 @@ from lib.HiddenLayer import HiddenLayer
 from lib.OutputLayer import OutputLayer
 
 class ANN:
-    def __init__(self, input_size, output_size, learning_rate=1e-2, max_epoch=1000, tolerance=1e-5):
+    def __init__(self, input_size, output_size, learning_rate=1e-1, max_epoch=1000, tolerance=1e-5):
         self.input_size = input_size
         self.layers = []
         self.output_size = output_size
@@ -75,6 +75,14 @@ class ANN:
     def reset_delta_weights(self):
         for layer in self.layers:
             layer.delta_weights = np.zeros(layer.weights.shape)
+
+    def set_expected_output(self, Y):
+        if self.layers[-1].layer_type != "output":
+            raise ValueError("The last layer must be output layer")
+        self.layers[-1].set_expected_output(Y)
+
+    def get_current_loss(self):
+        return self.layers[-1].loss
         
           
             
