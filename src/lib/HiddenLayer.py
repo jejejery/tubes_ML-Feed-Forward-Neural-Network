@@ -43,6 +43,10 @@ class HiddenLayer(Layer):
         
 
         return de_dNet, np.array(self.weights[1:], dtype=np.float64)
+
+    def predict(self, input_array : np.array):
+        result = super().predict(input_array=input_array)
+        return result
         
         
 

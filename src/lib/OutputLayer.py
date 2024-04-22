@@ -78,3 +78,6 @@ class OutputLayer(Layer):
             current_output_clone[i][pk[i]] = -(1-current_output_clone[i][pk[i]])
 
         return current_output_clone
+    
+    def predict(self, input_array : np.array):
+        return super().predict(input_array=input_array)

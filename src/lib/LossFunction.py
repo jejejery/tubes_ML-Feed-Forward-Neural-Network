@@ -17,7 +17,7 @@ class LossFunction:
 
 
     def cross_entropy(target : np.array, output : np.array):
-        loss = -(target * np.log(output))
+        loss = -(target * np.log(output + 1e-10))
         return np.sum(loss)/len(output)
     
 
