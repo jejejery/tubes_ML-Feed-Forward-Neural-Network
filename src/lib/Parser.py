@@ -54,5 +54,6 @@ class Parser:
 
     def isCorrect(self, prediction):
         return self.getSse(prediction) <= self.getMaxSse()
+    
         
     
