@@ -8,17 +8,17 @@ class Parser:
         data = 0
         with open(file_path, 'r') as json_file:
             data = json.load(json_file)
-        case = data["case"]
-        self.input = np.array(case["input"])
-        self.weights = list(case["weights"])
+        self.case = data["case"]
+        self.input = np.array(self.case["input"])
+        self.weights = list(self.case["weights"])
 
-        model = case["model"]
+        model = self.case["model"]
         self.input_size = model["input_size"]
         self.layers = model["layers"]
 
-        expect = data["expect"]
-        self.expected_output = np.array(expect["output"])
-        self.max_sse = expect["max_sse"]
+        self.expect = data["expect"]
+        self.expected_output = np.array(self.expect["output"])
+        self.max_sse = self.expect["max_sse"]
 
     def getInputSize(self):
         return self.input_size
@@ -56,3 +56,20 @@ class Parser:
         return self.getSse(prediction) <= self.getMaxSse()
         
     
+class BackPropParser(Parser): 
+    def __init__(self, file_path):
+        super().__init__(file_path)
+
+        self.initial_weights = list(self.case["initial_weights"])
+        self.target = np.array(self.case["target"])
+        
+        learning_parameters = self.case["learning_parameters"]
+
+        self.learning_rate = learning_parameters["learning_rate"]
+        self.batch_size = learning_parameters["batch_size"]
+        self.max_iteration = learning_parameters["max_iteration"]
+        self.error_threshold = learning_parameters["error_threshold"]
+
+        self.stopped_by = self.expect["stopped_by"]
+        self.final_weights = list(self.expect["final_weights"])
+        
