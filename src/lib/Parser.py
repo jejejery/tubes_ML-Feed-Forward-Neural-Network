@@ -2,6 +2,8 @@ import json
 import numpy as np
 from lib.HiddenLayer import HiddenLayer
 from lib.OutputLayer import OutputLayer
+from lib.Model import Model
+from lib.ANN import ANN
 
 class Parser:
     def __init__(self, file_path):
@@ -10,15 +12,24 @@ class Parser:
             data = json.load(json_file)
         self.case = data["case"]
         self.input = np.array(self.case["input"])
-        self.weights = list(self.case["weights"])
+        try:
+            self.weights = list(self.case["weights"])
+        except:
+            print()
 
         model = self.case["model"]
         self.input_size = model["input_size"]
         self.layers = model["layers"]
 
         self.expect = data["expect"]
-        self.expected_output = np.array(self.expect["output"])
-        self.max_sse = self.expect["max_sse"]
+        try:
+            self.expected_output = np.array(self.expect["output"])
+        except:
+            print()
+        try:
+            self.max_sse = self.expect["max_sse"]
+        except:
+            print()
 
     def getInputSize(self):
         return self.input_size
@@ -26,7 +37,7 @@ class Parser:
     def getOutputSize(self):
         return self.layers[-1]["number_of_neurons"]
 
-    def addAllLayers(self, model):
+    def addAllLayers(self, model, excpected_output = None):
         layers_size = len(self.layers)
         for i in range(layers_size):
             if i == 0:
@@ -36,7 +47,7 @@ class Parser:
                 layer = HiddenLayer(name=f"hidden{i+1}", input_shape=self.layers[i-1]["number_of_neurons"], output_shape=self.layers[i]["number_of_neurons"], weights=np.array(self.weights[i]), activation_function=self.layers[i]["activation_function"])
                 model.add(layer)
             else:
-                layer = OutputLayer(name="output1",input_shape=self.layers[i-1]["number_of_neurons"], output_shape=self.layers[i]["number_of_neurons"], weights=np.array(self.weights[i]), activation_function=self.layers[i]["activation_function"], expected_output=None)
+                layer = OutputLayer(name="output1",input_shape=self.layers[i-1]["number_of_neurons"], output_shape=self.layers[i]["number_of_neurons"], weights=np.array(self.weights[i]), activation_function=self.layers[i]["activation_function"], expected_output=excpected_output)
                 model.add(layer)
 
     def getExpectedOutput(self):
@@ -60,7 +71,7 @@ class BackPropParser(Parser):
     def __init__(self, file_path):
         super().__init__(file_path)
 
-        self.initial_weights = list(self.case["initial_weights"])
+        self.weights = list(self.case["initial_weights"])
         self.target = np.array(self.case["target"])
         
         learning_parameters = self.case["learning_parameters"]
@@ -72,4 +83,9 @@ class BackPropParser(Parser):
 
         self.stopped_by = self.expect["stopped_by"]
         self.final_weights = list(self.expect["final_weights"])
+
+    def build_model(self) -> Model :
+        model = Model("the_model", ANN(self.input_size,len(self.target[0]), self.learning_rate, self.max_iteration, self.error_threshold))
+        self.addAllLayers(model, self.target)
+        return model
         
