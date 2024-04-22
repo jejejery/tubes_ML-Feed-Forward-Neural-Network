@@ -20,7 +20,7 @@ class OutputLayer(Layer):
     def backward_propagation(self):
         super().backward_propagation() #abstract method of Layer
 
-        #1st, compute the gradient the neuron
+        #1st, compute the gradient the neuron, de_dNet
 
         #partial derivate of the loss function with respect to the output of the neuron
         
@@ -61,7 +61,9 @@ class OutputLayer(Layer):
             
 
 
-        return de_dNet
+        # return the gradient of the neuron and the weights, exclude bias
+
+        return de_dNet, np.array(self.weights[1:])
     
 
     # compute the gradient of the softmax function

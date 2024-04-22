@@ -56,16 +56,16 @@ class ANN:
     def backward_propagation(self):
         #implement the backward propagation
         #for 2nd milestone
-        gradient = None
+        gradient, weights = None, None
         for layer in reversed(self.layers):
             if gradient is None:
                 #for output layer, the gradient is the gradient of the loss function
-                gradient = layer.backward_propagation()
+                gradient, weights = layer.backward_propagation()
             else:
                 #for hidden layer, the gradient is the gradient of the next layer
-                # gradient = layer.backward_propagation(gradient) =====> to be implemented
-                layer.backward_propagation()
-            self.update_weights()
+                gradient, weights = layer.backward_propagation(gradient, weights)
+                # layer.backward_propagation()
+        self.update_weights()
         self.reset_delta_weights()
 
     def update_weights(self):

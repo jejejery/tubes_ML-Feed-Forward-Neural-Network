@@ -40,8 +40,11 @@ class Parser:
     def addAllLayers(self, model, excpected_output = None):
         layers_size = len(self.layers)
         for i in range(layers_size):
-            if i == 0:
+            if i == 0 and layers_size != 1:
                 layer = HiddenLayer(name=f"hidden{i+1}", input_shape=self.input_size, output_shape=self.layers[i]["number_of_neurons"], weights=np.array(self.weights[i]), activation_function=self.layers[i]["activation_function"])
+                model.add(layer)
+            elif layers_size == 1:
+                layer = OutputLayer(name="output1",input_shape=self.input_size, output_shape=self.layers[i]["number_of_neurons"], weights=np.array(self.weights[i]), activation_function=self.layers[i]["activation_function"], expected_output=excpected_output)
                 model.add(layer)
             elif i!=(layers_size-1):
                 layer = HiddenLayer(name=f"hidden{i+1}", input_shape=self.layers[i-1]["number_of_neurons"], output_shape=self.layers[i]["number_of_neurons"], weights=np.array(self.weights[i]), activation_function=self.layers[i]["activation_function"])
