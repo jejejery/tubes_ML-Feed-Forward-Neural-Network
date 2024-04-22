@@ -93,12 +93,27 @@ class Model:
                         
             print(f"Epoch {i+1} completed")
             print(f"Loss: {avg_loss}")
-            self.loses.append(self.ann.get_current_loss())
-            #print(f"Accuracy: {self.ann.accuracy(Y_train)}") 
+            self.loses.append(avg_loss)
+            if(X_valid is not None and Y_valid is not None):
+                self.accuracy(X_valid, Y_valid)
 
             if avg_loss < error_threshold:
                 break
 
+    def accuracy(self, X, Y):
+        if(len(X.shape) == 1):
+            X = X.reshape(X.shape[0], 1)
+        #if input shape invalid
+        if(X.shape[1] != self.ann.input_size):
+            raise ValueError(f"Invalid input size. Expected: {self.ann.input_size}, got: {X.shape[1]}")
+        
+        #calculate the accuracy
+        prediction = self.predict(X)
+        correct = 0
+        for i in range(len(prediction)):
+            if np.argmax(prediction[i]) == np.argmax(Y[i]):
+                correct += 1
+        print(f"Accuracy: {correct/len(Y)*100}%")
 
 
         
