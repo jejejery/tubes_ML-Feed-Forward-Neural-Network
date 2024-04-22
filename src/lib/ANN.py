@@ -49,8 +49,13 @@ class ANN:
         A = X
         for layer in self.layers:
             A = layer.forward_propagation(A)
-        # print(f"loss: {loss(A)}")
-        # print turunan dari loss(A)
+        return A
+    
+    def predict(self, X : np.array):
+        A = X
+        for layer in self.layers:
+            A = layer.predict(A)
+            print(A)
         return A
     
     def backward_propagation(self):

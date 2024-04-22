@@ -45,7 +45,7 @@ class Model:
         if(X.shape[1] != self.ann.input_size):
             raise ValueError(f"Invalid input size. Expected: {self.ann.input_size}, got: {X.shape[1]}")
         #return
-        return self.ann.forward_propagation(X)
+        return self.ann.predict(X)
     
     def test_backward(self):
         self.ann.backward_propagation()
@@ -94,8 +94,9 @@ class Model:
             print(f"Epoch {i+1} completed")
             print(f"Loss: {avg_loss}")
             self.loses.append(avg_loss)
-            if(X_valid is not None and Y_valid is not None):
-                self.accuracy(X_valid, Y_valid)
+            self.accuracy(X_train, Y_train)
+            # if(X_valid is not None and Y_valid is not None):
+            #     self.accuracy(X_valid, Y_valid)
 
             if avg_loss < error_threshold:
                 break
