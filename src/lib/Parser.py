@@ -11,7 +11,7 @@ class Parser:
         with open(file_path, 'r') as json_file:
             data = json.load(json_file)
         self.case = data["case"]
-        self.input = np.array(self.case["input"])
+        self.input = np.array(self.case["input"], dtype=np.float64)
         try:
             self.weights = list(self.case["weights"])
         except:
@@ -23,7 +23,7 @@ class Parser:
 
         self.expect = data["expect"]
         try:
-            self.expected_output = np.array(self.expect["output"])
+            self.expected_output = np.array(self.expect["output"], dtype=np.float64)
         except:
             print()
         try:
@@ -41,20 +41,20 @@ class Parser:
         layers_size = len(self.layers)
         for i in range(layers_size):
             if i == 0 and layers_size != 1:
-                layer = HiddenLayer(name=f"hidden{i+1}", input_shape=self.input_size, output_shape=self.layers[i]["number_of_neurons"], weights=np.array(self.weights[i]), activation_function=self.layers[i]["activation_function"])
+                layer = HiddenLayer(name=f"hidden{i+1}", input_shape=self.input_size, output_shape=self.layers[i]["number_of_neurons"], weights=np.array(self.weights[i], dtype=np.float64), activation_function=self.layers[i]["activation_function"])
                 model.add(layer)
             elif layers_size == 1:
-                layer = OutputLayer(name="output1",input_shape=self.input_size, output_shape=self.layers[i]["number_of_neurons"], weights=np.array(self.weights[i]), activation_function=self.layers[i]["activation_function"], expected_output=excpected_output)
+                layer = OutputLayer(name="output1",input_shape=self.input_size, output_shape=self.layers[i]["number_of_neurons"], weights=np.array(self.weights[i], dtype=np.float64), activation_function=self.layers[i]["activation_function"], expected_output=excpected_output)
                 model.add(layer)
             elif i!=(layers_size-1):
-                layer = HiddenLayer(name=f"hidden{i+1}", input_shape=self.layers[i-1]["number_of_neurons"], output_shape=self.layers[i]["number_of_neurons"], weights=np.array(self.weights[i]), activation_function=self.layers[i]["activation_function"])
+                layer = HiddenLayer(name=f"hidden{i+1}", input_shape=self.layers[i-1]["number_of_neurons"], output_shape=self.layers[i]["number_of_neurons"], weights=np.array(self.weights[i], dtype=np.float64), activation_function=self.layers[i]["activation_function"])
                 model.add(layer)
             else:
-                layer = OutputLayer(name="output1",input_shape=self.layers[i-1]["number_of_neurons"], output_shape=self.layers[i]["number_of_neurons"], weights=np.array(self.weights[i]), activation_function=self.layers[i]["activation_function"], expected_output=excpected_output)
+                layer = OutputLayer(name="output1",input_shape=self.layers[i-1]["number_of_neurons"], output_shape=self.layers[i]["number_of_neurons"], weights=np.array(self.weights[i], dtype=np.float64), activation_function=self.layers[i]["activation_function"], expected_output=excpected_output)
                 model.add(layer)
 
     def getExpectedOutput(self):
-        return np.array(self.expected_output)
+        return np.array(self.expected_output, dtype=np.float64)
     
     def getMaxSse(self):
         return self.max_sse
@@ -75,7 +75,7 @@ class BackPropParser(Parser):
         super().__init__(file_path)
 
         self.weights = list(self.case["initial_weights"])
-        self.target = np.array(self.case["target"])
+        self.target = np.array(self.case["target"], dtype=np.float64)
         
         learning_parameters = self.case["learning_parameters"]
 

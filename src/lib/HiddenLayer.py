@@ -42,7 +42,7 @@ class HiddenLayer(Layer):
     
         
 
-        return de_dNet, np.array(self.weights[1:])
+        return de_dNet, np.array(self.weights[1:], dtype=np.float64)
         
         
 

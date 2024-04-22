@@ -99,7 +99,7 @@ class Layer:
 
     def debug(self):
         print(f"Layer: {self.name} | Type: {self.layer_type}", end=" ")
-        print(f"| Output shape: {self.output_shape}")
+        print(f"| Output shape: {self.output_shape} | Activation function: {self.activation_function}")
         print(f"Weights:\n {self.weights}")
         
         

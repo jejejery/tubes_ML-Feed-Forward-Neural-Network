@@ -16,21 +16,9 @@ class LossFunction:
         return 0.5 * temp_sum
 
 
-    def cross_entropy(output : np.array):
-
-        '''
-            Output, np.array 2D
-            Output example: [[0.1, 0.2, 0.7], [0.8, 0.1, 0.1]]
-
-            pk = max(Output)
-
-        '''
-
-        temp_sum = 0
-        for i in range(len(output)):
-            pk = np.argmax(output[i])
-            temp_sum += -np.log(output[i][pk] + 1e-10)
-        return temp_sum
+    def cross_entropy(target : np.array, output : np.array):
+        loss = -(target * np.log(output))
+        return np.sum(loss)/len(output)
     
 
     def mean_squared_error_derivative(target : np.array,output : np.array):
@@ -41,15 +29,4 @@ class LossFunction:
         '''
         return output - target
 
-    @staticmethod
-    def get_loss_function(name, target, output):
-        if name == "relu" or name == "sigmoid" or name == "linear":
-            return LossFunction.mean_squared_error(target, output)
-        elif name == "softmax":
-            return LossFunction.cross_entropy(output)
-        # elif name == "tanh":
-        #     not implemented yet
-        else:
-            raise ValueError("Invalid activation function name")
-        
     

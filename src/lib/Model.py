@@ -53,7 +53,7 @@ class Model:
     """
     Please change the validation part to use the validation set
     """
-    def fit(self, X_train : np.array, Y_train : np.array, epochs : int, learning_rate : float, batch_size : int = 1, X_valid : np.array = None, Y_valid : np.array = None, error_threshold : float = 1e-5):
+    def fit(self, X_train : np.array, Y_train : np.array, epochs : int, learning_rate : float, batch_size : int = 1, X_valid : np.array = None, Y_valid : np.array = None, error_threshold : float = 1e-5, ):
         # check if the last layer is output layer
         if self.ann.layers[-1].layer_type != "output":
             raise ValueError("The last layer must be output layer")
@@ -71,11 +71,10 @@ class Model:
         self.train_input = X_train
         self.train_output = Y_train
 
-        #valid
-        #self.valid_input = X_valid
-        #self.valid_output = Y_valid
         for i in range(epochs):
             #looping for each batch
+            iter = 0
+            loss = 0
             for j in range(0, X_train.shape[0], batch_size):
                 #get the batch
                 X_batch = X_train[j:j+batch_size]
@@ -85,15 +84,21 @@ class Model:
                 self.ann.forward_propagation(X_batch)
                 #backward propagation
                 self.ann.backward_propagation()
+                loss += self.ann.get_current_loss()
+                iter += 1
+
+            avg_loss = loss / iter
             
             #break if the error is below the threshold
-            if self.ann.get_current_loss() < error_threshold:
+                        
+            print(f"Epoch {i+1} completed")
+            print(f"Loss: {avg_loss}")
+            self.loses.append(self.ann.get_current_loss())
+            #print(f"Accuracy: {self.ann.accuracy(Y_train)}") 
+
+            if avg_loss < error_threshold:
                 break
 
 
-            
-            print(f"Epoch {i+1} completed")
-            print(f"Loss: {self.ann.get_current_loss()}")
-            self.loses.append(self.ann.get_current_loss())
-            #print(f"Accuracy: {self.ann.accuracy(Y_train)}")
+
         

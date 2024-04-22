@@ -43,7 +43,7 @@ class OutputLayer(Layer):
         # calculate de_dNet  for softmax
         elif self.activation_function == "softmax":
             de_dNet = self.softmax_gradient()
-            self.loss = LossFunction.cross_entropy(self.current_output)
+            self.loss = LossFunction.cross_entropy(self.expected_output, self.current_output)
               
         # 3. dNet/dw
         # dNet/dw = self.current_input
@@ -63,7 +63,7 @@ class OutputLayer(Layer):
 
         # return the gradient of the neuron and the weights, exclude bias
 
-        return de_dNet, np.array(self.weights[1:])
+        return de_dNet, np.array(self.weights[1:], dtype=np.float64)
     
 
     # compute the gradient of the softmax function
@@ -71,7 +71,7 @@ class OutputLayer(Layer):
         #find argmax of each row for the expected output
         pk = np.argmax(self.expected_output, axis=1)
         
-        current_output_clone = np.array(self.current_output)
+        current_output_clone = np.array(self.current_output, dtype=np.float64)
         # sort the current output in descending order
         -np.sort(-current_output_clone, axis=1)
         for i in range(len(current_output_clone)):
