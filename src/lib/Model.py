@@ -37,7 +37,7 @@ class Model:
             temp = p.load(file)
         return temp
 
-    def predict(self, X : np.array):
+    def predict(self, X : np.array, Y : np.array = None):
         #resize is X is not 2D array
         if(len(X.shape) == 1):
             X = X.reshape(X.shape[0], 1)
@@ -45,7 +45,25 @@ class Model:
         if(X.shape[1] != self.ann.input_size):
             raise ValueError(f"Invalid input size. Expected: {self.ann.input_size}, got: {X.shape[1]}")
         #return
-        return self.ann.predict(X)
+        result =  self.ann.predict(X)
+
+        if Y is not None:
+            correct = 0
+            for i in range(len(result)):
+                if np.argmax(result[i]) == np.argmax(Y[i]):
+                    correct += 1
+            print(f"Validation Accuracy: {correct/len(Y)*100}%")
+        return np.argmax(result, axis=1)
+
+    def prob_predict(self, X : np.array):
+        if(len(X.shape) == 1):
+            X = X.reshape(X.shape[0], 1)
+        #if input shape invalid
+        if(X.shape[1] != self.ann.input_size):
+            raise ValueError(f"Invalid input size. Expected: {self.ann.input_size}, got: {X.shape[1]}")
+        #return
+        result =  self.ann.predict(X)
+        return result
     
     def test_backward(self):
         self.ann.backward_propagation()
@@ -70,7 +88,8 @@ class Model:
         #train
         self.train_input = X_train
         self.train_output = Y_train
-
+        print("Start Training for MLP")
+        print("====================================")
         for i in range(epochs):
             #looping for each batch
             iter = 0
@@ -94,14 +113,14 @@ class Model:
             print(f"Epoch {i+1} completed")
             print(f"Loss: {avg_loss}")
             self.loses.append(avg_loss)
-            self.accuracy(X_train, Y_train)
-            # if(X_valid is not None and Y_valid is not None):
-            #     self.accuracy(X_valid, Y_valid)
+            self.train_accuracy(X_train, Y_train)
+            print("====================================")
+            
 
             if avg_loss < error_threshold:
                 break
 
-    def accuracy(self, X, Y):
+    def train_accuracy(self, X, Y):
         if(len(X.shape) == 1):
             X = X.reshape(X.shape[0], 1)
         #if input shape invalid
@@ -109,12 +128,26 @@ class Model:
             raise ValueError(f"Invalid input size. Expected: {self.ann.input_size}, got: {X.shape[1]}")
         
         #calculate the accuracy
-        prediction = self.predict(X)
+        prediction = self.prob_predict(X)
         correct = 0
         for i in range(len(prediction)):
             if np.argmax(prediction[i]) == np.argmax(Y[i]):
                 correct += 1
-        print(f"Accuracy: {correct/len(Y)*100}%")
+        print(f"Training Accuracy: {correct/len(Y)*100}%")
+
+    def init_weight(self,the_shape, dtype=None, seed=None):
+        print(the_shape)
+        if seed is not None:
+            np.random.seed(seed)
+        if dtype is None:
+            dtype = np.float32
+
+        std = 2
+        mean = 0
+        weights = np.random.normal(loc=mean, scale=std, size = the_shape).astype(type)
+
+        return np.array(weights).astype(dtype)
+
 
 
         

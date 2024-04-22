@@ -89,6 +89,6 @@ class BackPropParser(Parser):
 
     def build_model(self) -> Model :
         model = Model("the_model", ANN(self.input_size,len(self.target[0]), self.learning_rate, self.max_iteration, self.error_threshold))
-        self.addAllLayers(model, self.target)
+        self.addAllLayers(model, excpected_output=self.target)
         return model
         

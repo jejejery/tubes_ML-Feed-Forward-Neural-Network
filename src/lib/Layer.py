@@ -80,7 +80,9 @@ class Layer:
     def predict(self, input_array : np.array):
         if len(input_array.shape) == 1:
             input_array = input_array.reshape(1, -1)
-        result =  ActivationFunction.get_activation_function(self.activation_function)(self.pre_activation(input_array))
+        Z = self.pre_activation(input_array)
+        
+        result =  ActivationFunction.get_activation_function(self.activation_function)(Z)
         return result
     
     """

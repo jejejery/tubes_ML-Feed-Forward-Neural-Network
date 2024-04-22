@@ -55,7 +55,6 @@ class ANN:
         A = X
         for layer in self.layers:
             A = layer.predict(A)
-            print(A)
         return A
     
     def backward_propagation(self):
